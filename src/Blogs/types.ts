@@ -10,7 +10,7 @@ export interface BlogPostInputModel {
 
 export interface BlogViewModel {
     id: string
-    name: string// max 15
+    name: string// max 15 TODO вроде уже нет ограничения
     youtubeUrl: string
     createdAt: string//TODO в дз не обязательный в интерфейсе
 }

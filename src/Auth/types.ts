@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken"
 
 export interface AuthViewModel {
     id: string
@@ -31,8 +32,19 @@ export interface LoginInputModel {
 export interface RegistrationCodeViewModel {
     id: string
     userId: string
-    email:string
+    email: string
     code: string
     expirationDate: Date
-    restartTime:Date
+    restartTime: Date
+}
+export interface AccessTokenPayloadModel {
+    userId: string
+}
+export interface RefreshTokenPayloadModel {
+    userId: string
+}
+export interface RottenToken {
+    id: string
+    refreshToken: string
+    expirationDate:Date
 }

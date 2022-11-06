@@ -5,7 +5,7 @@ import { AdapterType } from './types';
 
 //Query Builder
 // Connection URL
-const urlMongo = process.env.MONGO_URI || "mongodb+srv://AlexGr:mth0F2JOfBhmJlk4@cluster0.ojk6ayv.mongodb.net/?retryWrites=true&w=majority" || 'mongodb://127.0.0.1:27017'
+const urlMongo = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017'
 console.log('urlMongo:', urlMongo);
 
 const clientMongo = new MongoClient(urlMongo)

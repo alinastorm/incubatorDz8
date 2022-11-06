@@ -15,19 +15,19 @@ function check(schema: any, body: any) {
 }
 describe("/blogs", () => {
     beforeAll(() => {
-        httpService.runHttpServer()
+        httpService.runHttpsServer()
     })
     afterAll(async () => {
         await DbMongo.disconnect()
         httpService.stop()
     })
     test('All delete', async () => {
-        const { status } = await request(httpService.server).delete("/testing/all-data")
+        const { status } = await request(httpService.httpServer).delete("/testing/all-data")
         expect(status).toBe(204)
     })
     test('GET Blogs []', async () => {
 
-        const { status, body } = await request(httpService.server).get("/blogs")
+        const { status, body } = await request(httpService.httpServer).get("/blogs")
 
         expect(status).toBe(200)
 
@@ -41,7 +41,7 @@ describe("/blogs", () => {
 
     })
     test('POST Blogs unauthorized', async () => {
-        const { status, body } = await request(httpService.server)
+        const { status, body } = await request(httpService.httpServer)
             .post("/blogs")
             .send({
                 "name": "string",
@@ -52,7 +52,7 @@ describe("/blogs", () => {
     })
     let blog: BlogViewModel | null = null
     test('POST Blogs ', async () => {
-        const { status, body } = await request(httpService.server)
+        const { status, body } = await request(httpService.httpServer)
             .post("/blogs")
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({
@@ -112,7 +112,7 @@ describe("/blogs", () => {
             ]
         }
 
-        const { status, body } = await request(httpService.server).get(`/blogs/${blog?.id}`)
+        const { status, body } = await request(httpService.httpServer).get(`/blogs/${blog?.id}`)
 
         expect(status).toBe(200)
         expect(check(schema, body)).toBe(true)
@@ -125,7 +125,7 @@ describe("/blogs", () => {
     test('PUT Blogs ', async () => {
 
 
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .put(`/blogs/${blog?.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send(newElem)
@@ -158,7 +158,7 @@ describe("/blogs", () => {
                 "createdAt"
             ]
         }
-        const { status, body } = await request(httpService.server).get(`/blogs/${blog?.id}`)
+        const { status, body } = await request(httpService.httpServer).get(`/blogs/${blog?.id}`)
 
         expect(status).toBe(200)
         expect(check(schema, body)).toBe(true)
@@ -219,7 +219,7 @@ describe("/blogs", () => {
             ]
 
         }
-        const { status, body } = await request(httpService.server).get("/blogs")
+        const { status, body } = await request(httpService.httpServer).get("/blogs")
 
         expect(status).toBe(200)
         expect(check(schema, body)).toBe(true)
@@ -232,7 +232,7 @@ describe("/blogs", () => {
         "content": "string"
     }
     test('POST Post by Blog ID', async () => {
-        const { status, body } = await request(httpService.server)
+        const { status, body } = await request(httpService.httpServer)
             .post(`/blogs/${blog?.id}/posts`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send(newPost)
@@ -277,14 +277,14 @@ describe("/blogs", () => {
     })
     test('Delete Blog by ID', async () => {
 
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .delete(`/blogs/${blog?.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
 
         expect(status).toBe(204)
     })
     test('GET Blog after delete ', async () => {
-        const { status } = await request(httpService.server).get(`/blogs/${blog?.id}`)
+        const { status } = await request(httpService.httpServer).get(`/blogs/${blog?.id}`)
 
         expect(status).toBe(404)
 

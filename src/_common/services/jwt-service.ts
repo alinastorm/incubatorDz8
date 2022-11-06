@@ -1,23 +1,37 @@
-import jwt from "jsonwebtoken"
-import { LoginSuccessViewModel } from "../../Auth/types";
+import jwt, { JwtPayload } from "jsonwebtoken"
+import { AccessTokenPayloadModel, LoginSuccessViewModel, RefreshTokenPayloadModel } from "../../Auth/types";
 
-const secret = process.env.JWT_SECRET || 'test'
+const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'JWT_ACCESS_SECRET'
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'JWT_REFRESH_SECRET'
 export const jwtService = {
 
-    generateAccessToken(userId: string) {
-        const accessToken = jwt.sign({ userId }, secret, { expiresIn: '1h' })
+    generateAccessToken(payload: AccessTokenPayloadModel) {
+        const seconds = process.env.JWT_ACCESS_LIFE_TIME_SECONDS ?? 10
+        const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: `${seconds}s` })
         const result: LoginSuccessViewModel = { accessToken }
         return result
     },
-    getUserIdByToken(token: string) {
+    generateRefreshToken(payload: RefreshTokenPayloadModel) {
+        const seconds = process.env.JWT_REFRESH_LIFE_TIME_SECONDS ?? 20
+        const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: `${seconds}s` })
+        return refreshToken
+    },
+    getDataByAccessToken(token: string) {
         try {
-            const result: any = jwt.verify(token, secret)
-            //TODO проверка на expiresIn Tokena
-            return result.userId
+            const result = jwt.verify(token, JWT_ACCESS_SECRET)
+            return result as AccessTokenPayloadModel
         } catch (error) {
             return null
         }
-
+    },
+    getDataByRefreshToken(token: string) {
+        try {
+            const result: any = jwt.verify(token, JWT_REFRESH_SECRET)
+            return result as RefreshTokenPayloadModel
+        } catch (error) {
+            return null
+        }
     }
+
 
 }

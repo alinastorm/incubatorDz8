@@ -3,7 +3,7 @@ export interface UserViewModel {
     id: string
     login: string
     email: string
-    confirm:boolean
+    confirm:boolean //мое
     createdAt?: string //	TODO в дз не обязательный в интерфей
 }
 

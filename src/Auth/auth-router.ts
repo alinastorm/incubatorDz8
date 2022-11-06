@@ -19,7 +19,10 @@ authRoutes.post(`/auth/login`,
     // passwordBodyValidationMiddleware,
     schemaLoginInputValidationMiddleware,
     mainValidator400,
-    authController.login)
+    <any>authController.login)
+
+authRoutes.post(`/auth/refresh-token`,
+     <any>authController.refreshTokens)
 
 authRoutes.post(`/auth/registration-confirmation`,
     codeConfirmBodyValidationMiddleware,
@@ -39,6 +42,10 @@ authRoutes.post(`/auth/registration-email-resending`,
     emailBodyValidationMiddleware,//Email of already registered but not confirmed user
     mainValidator400,
     <any> authController.resendEmail
+)
+
+authRoutes.post(`/auth/logout`,
+     authController.logout
 )
 
 authRoutes.post(`/auth/me`,

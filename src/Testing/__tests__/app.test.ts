@@ -14,7 +14,7 @@ function check(schema: any, body: any) {
 }
 describe("/posts", () => {
   beforeAll(() => {
-    httpService.runHttpServer()
+    httpService.runHttpsServer()
   })
   afterAll(async () => {
     await DbMongo.disconnect()
@@ -22,7 +22,7 @@ describe("/posts", () => {
   })
 
   test('Wrong route', async () => {
-    const { status } = await request(httpService.server).get("/wrong")
+    const { status } = await request(httpService.httpServer).get("/wrong")
     expect(status).toBe(HTTP_STATUSES.NOT_FOUND_404)
   })
 

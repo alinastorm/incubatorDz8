@@ -39,7 +39,6 @@ postsRoutes.post(`/posts/:postId/comments`,
     // postParamIdInBDValidationMiddleware,
     <any>postsController.createCommentsByPostId)
 
-
 postsRoutes.get(`/posts`,
     pageNumberQueryValidationMiddleware,
     pageSizeQueryValidationMiddleware,

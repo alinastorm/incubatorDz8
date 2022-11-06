@@ -17,7 +17,7 @@ function checkSchema(schema: any, body: any) {
 }
 describe("/users", () => {
     beforeAll(() => {
-        httpService.runHttpServer()
+        httpService.runHttpsServer()
     })
     afterAll(async () => {
         await DbMongo.disconnect()
@@ -25,12 +25,12 @@ describe("/users", () => {
     })
 
     test('All delete', async () => {
-        const { status } = await request(httpService.server).delete("/testing/all-data")
+        const { status } = await request(httpService.httpServer).delete("/testing/all-data")
         expect(status).toBe(204)
     })
     test('Return All users = []', async () => {
 
-        const { status, body } = await request(httpService.server)
+        const { status, body } = await request(httpService.httpServer)
             .get("/users")
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
 
@@ -47,7 +47,7 @@ describe("/users", () => {
 
     })
     test('Add new user to the system', async () => {
-        const { status, body } = await request(httpService.server)
+        const { status, body } = await request(httpService.httpServer)
             .post("/users")
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({
@@ -82,7 +82,7 @@ describe("/users", () => {
         expect(checkSchema(schema, body)).toBe(true)
     })
     test('Try login user to the system', async () => {
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .post("/auth/login")
             .send({
                 "login": "User1",
@@ -91,7 +91,7 @@ describe("/users", () => {
         expect(status).toBe(200)
     })
     test('Try login wrong user to the system', async () => {
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .post("/auth/login")
             .send({
                 "login": "UserWrong",
@@ -102,7 +102,7 @@ describe("/users", () => {
     let user: UserViewModel
     test('Return All users after added', async () => {
 
-        const { status, body }: { status: any, body: Paginator<UserViewModel> } = await request(httpService.server)
+        const { status, body }: { status: any, body: Paginator<UserViewModel> } = await request(httpService.httpServer)
             .get("/users")
         const schema = {
             "type": "object",
@@ -162,14 +162,14 @@ describe("/users", () => {
     })
     test('Delete User by ID', async () => {
 
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .delete(`/users/${user.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
 
         expect(status).toBe(204)
     })
     test('Try login after delete User to the system', async () => {
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .post("/auth/login")
             .send({
                 "login": "User1",
@@ -178,7 +178,7 @@ describe("/users", () => {
         expect(status).toBe(401)
     })
     test('GET User after delete by ID', async () => {
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .get(`/blogs/${user?.id}`)
 
         expect(status).toBe(404)

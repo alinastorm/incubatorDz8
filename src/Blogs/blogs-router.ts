@@ -46,7 +46,6 @@ blogsRoutes.get(`/blogs/:blogId/posts`,
     blogIdParamInBDValidationMiddleware,
     <any>blogsController.readAllPostsByBlogIdWithPaginationAndSort)
 
-
 blogsRoutes.post(`/blogs/:blogId/posts`,
     authorizationBasicMiddleware401,
     blogIdParamUriValidationMiddleware,

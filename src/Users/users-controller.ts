@@ -34,7 +34,7 @@ class UserController {
 
     async createOne(
         req: RequestWithBody<UserInputModel>,
-        res: ResponseWithBodyCode<UserViewModel, 201 | 404>
+        res: ResponseWithBodyCode<Omit<UserViewModel,"confirm">, 201 | 404>
     ) {
 
         const { email, login, password } = req.body
@@ -47,8 +47,11 @@ class UserController {
         const idAuth: string = await authRepository.createOne(queryAuth)
 
         const user: UserViewModel | null = await usersRepository.readOne(userId)
+        
         if (!user) return res.status(HTTP_STATUSES.NOT_FOUND_404)
-        res.status(HTTP_STATUSES.CREATED_201).send(user)
+        const { confirm, ...other } = user
+        const result = other
+        res.status(HTTP_STATUSES.CREATED_201).send(result)
     }
 
     async deleteOne(

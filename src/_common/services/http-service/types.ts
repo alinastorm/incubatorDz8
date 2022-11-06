@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { Response } from 'express-serve-static-core';
+import { IObject } from '../../types/types';
 
 export enum HTTP_STATUSES {
     OK_200 = 200,
@@ -18,8 +19,10 @@ export type RequestWithQueryBody<Q, B> = Request<{}, {}, B, Q>
 export type RequestWithParamsQuery<P, Q> = Request<P, {}, {}, Q>
 export type RequestWithParamsBody<P, B> = Request<P, {}, B>
 export type RequestWithParamsQueryBody<P, Q, B> = Request<P, {}, B, Q>
-export type RequestWithUser<U> = Request & U
+export interface RequestWithCookies<T> extends Request {
+    cookies: T;
+}
+// export type RequestWithUser<U> = Request & U
 
 export type ResponseWithCode<C extends number> = Response<{}, {}, C>
-export type ResponseWithBodyCode<B , C extends number> = Response<B, {}, C>
-
+export type ResponseWithBodyCode<B, C extends number> = Response<B, {}, C>

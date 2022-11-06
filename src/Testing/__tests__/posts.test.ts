@@ -14,19 +14,19 @@ function check(schema: any, body: any) {
 }
 describe("/posts", () => {
     beforeAll(() => {
-        httpService.runHttpServer()
+        httpService.runHttpsServer()
     })
     afterAll(async () => {
         await DbMongo.disconnect()
         httpService.stop()
     })
     test('All delete', async () => {
-        const { status } = await request(httpService.server).delete("/testing/all-data")
+        const { status } = await request(httpService.httpServer).delete("/testing/all-data")
         expect(status).toBe(204)
     })
     test('GET Posts []', async () => {
 
-        const { status, body } = await request(httpService.server).get("/posts")
+        const { status, body } = await request(httpService.httpServer).get("/posts")
 
         expect(status).toBe(200)
         expect(body).toStrictEqual({
@@ -39,7 +39,7 @@ describe("/posts", () => {
 
     })
     test('POST Posts unauthorized', async () => {
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .post("/posts")
             .send({
                 "name": "string",
@@ -56,7 +56,7 @@ describe("/posts", () => {
         "blogId": "string"
     }
     test('POST Blog for POST Post ', async () => {
-        const { status, body } = await request(httpService.server)
+        const { status, body } = await request(httpService.httpServer)
             .post("/blogs")
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({
@@ -68,12 +68,12 @@ describe("/posts", () => {
 
     })
     test('GET Blogs for Post post', async () => {
-        const { status, body } = await request(httpService.server).get("/blogs")
+        const { status, body } = await request(httpService.httpServer).get("/blogs")
         expect(status).toBe(200)
         newPost.blogId = body.items[0].id
     })
     test('POST Post ', async () => {
-        const { status, body } = await request(httpService.server)
+        const { status, body } = await request(httpService.httpServer)
 
             .post("/posts")
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
@@ -155,7 +155,7 @@ describe("/posts", () => {
             ]
         }
 
-        const { status, body } = await request(httpService.server).get(`/posts/${post?.id}`)
+        const { status, body } = await request(httpService.httpServer).get(`/posts/${post?.id}`)
 
         expect(status).toBe(200)
         expect(check(schema, body)).toBe(true)
@@ -167,7 +167,7 @@ describe("/posts", () => {
         "content": "string2",
     }
     test('PUT Post ', async () => {
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .put(`/posts/${post?.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({ ...newPost, ...updatePost })
@@ -212,7 +212,7 @@ describe("/posts", () => {
                 "createdAt"
             ]
         }
-        const { status, body } = await request(httpService.server).get(`/posts/${post?.id}`)
+        const { status, body } = await request(httpService.httpServer).get(`/posts/${post?.id}`)
 
         expect(status).toBe(200)
         expect(check(schema, body)).toBe(true)
@@ -222,14 +222,14 @@ describe("/posts", () => {
 
     test('Delete Post by ID', async () => {
 
-        const { status } = await request(httpService.server)
+        const { status } = await request(httpService.httpServer)
             .delete(`/posts/${post?.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
 
         expect(status).toBe(204)
     })
     test('GET Post after delete ', async () => {
-        const { status } = await request(httpService.server).get(`/posts/${post?.id}`)
+        const { status } = await request(httpService.httpServer).get(`/posts/${post?.id}`)
 
         expect(status).toBe(404)
 
