@@ -7,7 +7,7 @@ import { CommentBdModel, CommentInputModel, CommentViewModel } from '../Comments
 import { UserViewModel } from '../Users/types';
 import usersRepository from '../Users/users-repository';
 import { Paginator, SearchPaginationModel } from '../_common/repository/types';
-import { HTTP_STATUSES, RequestWithBody, RequestWithParams, RequestWithParamsBody, RequestWithParamsQuery, RequestWithQuery, ResponseWithBodyCode, ResponseWithCode } from '../_common/services/http-service/types';
+import { HTTP_STATUSES, RequestWithBody, RequestWithHeaders, RequestWithParams, RequestWithParamsBody, RequestWithParamsQuery, RequestWithQuery, ResponseWithBodyCode, ResponseWithCode } from '../_common/services/http-service/types';
 import { NoExtraProperties } from '../_common/types/types';
 import postsRepository from './posts-repository';
 import { PostInputModel, PostViewModel } from './types';
@@ -107,7 +107,7 @@ class PostsController {
         }
     }
     async createCommentsByPostId(
-        req: RequestWithParamsBody<{ postId: string }, CommentInputModel> & { userId: string },
+        req: RequestWithParamsBody<{ postId: string }, CommentInputModel> & RequestWithHeaders<{ authorization: string }> & { userId: string },
         res: ResponseWithBodyCode<CommentViewModel, 201 | 401 | 404>
     ) {
         const postId = req.params.postId

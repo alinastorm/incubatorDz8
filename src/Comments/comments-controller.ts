@@ -2,7 +2,7 @@ import { Response } from 'express';
 import commentsRepository from './comments-repository';
 import { CommentBdModel, CommentInputModel, CommentViewModel } from './types';
 import { BlogViewModel } from '../Blogs/types';
-import { HTTP_STATUSES, RequestWithParams, RequestWithParamsBody, ResponseWithBodyCode, ResponseWithCode } from '../_common/services/http-service/types';
+import { HTTP_STATUSES, RequestWithHeaders, RequestWithParams, RequestWithParamsBody, ResponseWithBodyCode, ResponseWithCode } from '../_common/services/http-service/types';
 import { NoExtraProperties } from '../_common/types/types';
 
 
@@ -26,11 +26,11 @@ class CommentsController {
         res.status(HTTP_STATUSES.OK_200).send(mapComment)
     }
     async updateOne(
-        req: RequestWithParamsBody<{ commentId: string }, CommentInputModel> & { userId: string },
+        req: RequestWithParamsBody<{ commentId: string }, CommentInputModel> & RequestWithHeaders<{ authorization: string }> & { userId: string },
         res: ResponseWithCode<204 | 403 | 404>) {
 
         const { commentId } = req.params
-        const  content = req.body
+        const content = req.body
         const userId = req.userId
         const comment = await commentsRepository.readOne<CommentBdModel>(commentId)
         if (!comment) return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
@@ -41,7 +41,7 @@ class CommentsController {
             null
     }
     async deleteOne(
-        req: RequestWithParams<{ commentId: string }> & { userId: string },
+        req: RequestWithParams<{ commentId: string }> & RequestWithHeaders<{ authorization: string }> & { userId: string },
         res: ResponseWithBodyCode<BlogViewModel, 204 | 403 | 404>
     ) {
         const { commentId } = req.params

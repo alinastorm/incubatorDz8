@@ -3,7 +3,7 @@ import usersRepository from '../Users/users-repository';
 import { APIErrorResult } from '../_common/middlewares/types';
 import cryptoService from '../_common/services/crypto-service';
 import { RegistrationConfirmationCodeModel, RegistrationEmailResending } from '../_common/services/email-service/types';
-import { HTTP_STATUSES, RequestWithBody, RequestWithCookies, ResponseWithBodyCode, ResponseWithCode } from '../_common/services/http-service/types';
+import { HTTP_STATUSES, RequestWithBody, RequestWithCookies, RequestWithHeaders, ResponseWithBodyCode, ResponseWithCode } from '../_common/services/http-service/types';
 import { jwtService } from '../_common/services/jwt-service';
 import registrationCode from './registrationCode-repository';
 import authRepository from './auth-repository';
@@ -18,52 +18,37 @@ class AuthController {
      * Задача бека, отметить refreshToken как невалидный (токен приходит в cookie)
      */
     async logout(
-        req: RequestWithCookies<{ refreshToken: string }>,
+        req: RequestWithCookies<{ refreshToken: string }> & { time: number },
         res:
             ResponseWithCode<204> &
             ResponseWithBodyCode<APIErrorResult, 401>
     ) {
         const reqRefreshToken = req.cookies.refreshToken
-        if (!reqRefreshToken) return res.sendStatus(401)
-        //проверяем тухлый ли токен
-        const userId = jwtService.getDataByRefreshToken(reqRefreshToken)?.userId
-        if (!userId) return res.sendStatus(401)
-        //проверяем в невалидных 
-        const query: Omit<RottenToken, "expirationDate" | 'id'> = { refreshToken: reqRefreshToken }
-        const refreshBdTokens = await tokensRepository.readAll(query)
-        if (refreshBdTokens.length) return res.sendStatus(401)
-        //добавляем в невалидные
+        //добавляем в списаные
         const seconds = process.env.JWT_REFRESH_LIFE_TIME_SECONDS ?? 20
         const expirationDate = add(new Date(), { seconds: Number(seconds) })
         const element: Omit<RottenToken, 'id'> = { refreshToken: reqRefreshToken, expirationDate }
-        await tokensRepository.createOne(element)
-
-        res.status(HTTP_STATUSES.NO_CONTENT_204)
+        tokensRepository.createOne(element)
+        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     }
     /**Generate new pair of access and refresh tokens (in cookie client must send correct refreshToken that will be revoked after refreshing)
      * Клиент отправляет на бек refreshToken в cookie, мы должны вернуть новую пару токенов (старый refreshToken протухает, т.е. отмечаем refreshToken как невалидный)
      */
     async refreshTokens(
-        req: RequestWithCookies<{ refreshToken: string }>,
+        req: RequestWithCookies<{ refreshToken: string }> & { userId: string },
         res:
             ResponseWithBodyCode<{ accessToken: string }, 200> &
             RequestWithCookies<{ refreshToken: string }> &
             ResponseWithBodyCode<APIErrorResult, 401>
     ) {
         const reqRefreshToken = req.cookies.refreshToken
-        if (!reqRefreshToken) return res.sendStatus(401)
-        //проверяем тухлый ли токен
-        const userId = jwtService.getDataByRefreshToken(reqRefreshToken)?.userId
-        if (!userId) return res.sendStatus(401)
-        //проверяем в невалидных 
-        const query: Omit<RottenToken, "expirationDate" | 'id'> = { refreshToken: reqRefreshToken }
-        const refreshBdTokens = await tokensRepository.readAll(query)
-        if (refreshBdTokens.length) return res.sendStatus(401)
-        //добавляем в невалидные
+        const userId = req.userId
+
+        //добавляем в списаные
         const seconds = process.env.JWT_REFRESH_LIFE_TIME_SECONDS ?? 20
         const expirationDate = add(new Date(), { seconds: Number(seconds) })
         const element: Omit<RottenToken, 'id'> = { refreshToken: reqRefreshToken, expirationDate }
-        await tokensRepository.createOne(element)
+        tokensRepository.createOne(element)
 
         const newRefreshToken = jwtService.generateRefreshToken({ userId })
         const newAccessToken = jwtService.generateAccessToken({ userId })
@@ -231,18 +216,11 @@ class AuthController {
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     }
     async getUser(
-        req: RequestWithCookies<{ accessToken: string }>,
+        req: RequestWithHeaders<{ authorization: string }> & { userId: string },
         res: ResponseWithBodyCode<MeViewModel, 200 | 401 | 500>
     ) {
-        const reqAccessToken = req.cookies.accessToken
-        //проверяем тухлый/валидный ли токен
-        const userId = jwtService.getDataByAccessToken(reqAccessToken)?.userId
-        if (!userId) return res.sendStatus(401)
-        //проверяем в невалидных 
-        const filter: Omit<RottenToken, "expirationDate" | 'id'> = { refreshToken: reqAccessToken }
-        const rootenRefreshBdTokens = await tokensRepository.readAll(filter)
-        if (rootenRefreshBdTokens.length) return res.sendStatus(401)
-
+        const userId = req.userId
+        //ищем юзера по id
         const user: UserViewModel | null = await usersRepository.readOne(userId)
         if (!user) return res.sendStatus(HTTP_STATUSES.SERVER_ERROR_500)
         const result: MeViewModel = {

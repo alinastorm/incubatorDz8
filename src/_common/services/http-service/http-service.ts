@@ -33,35 +33,28 @@ class HttpService {
             authRoutes,
             commentsRoutes,
         ])
-        // Certificate
-        const privateKey = fs.readFileSync('./ssl/key.pem', 'utf-8')
-        const certificate = fs.readFileSync('./ssl/cert.pem', 'utf-8')
-        const ca = fs.readFileSync('./ssl/csr.pem', 'utf8');
-        // const server = https.createServer({
-        //     key: privateKey,
-        //     cert: certificate,
-        //     ca: ca
-        // }, this.app
-        // )
+        // SSL Certificate
+        const privateKey = fs.readFileSync('./ssl/ubt.by-key.pem', 'utf-8')
+        const certificate = fs.readFileSync('./ssl/ubt.by-crt.pem', 'utf-8')
+        const ca = fs.readFileSync('./ssl/ubt.by-chain-only.pem', 'utf8');      
+
         const credentials = {
             key: privateKey,
             cert: certificate,
-            ca: ca //TODO почитать что это так как можно и без него
+            ca: ca 
         }
         // Starting both http & https servers
-        const httpServer = http.createServer(this.app);
         const httpsServer = https.createServer(credentials, this.app);
+        const httpServer = http.createServer(this.app);
+        
+        this.httpsServer = httpsServer.listen(this.httpsPort, () => {
+            console.log(`HTTPS Server running on port ${this.httpsPort}`);
+        });
 
         this.httpServer = httpServer.listen(this.httpPort, () => {
             console.log(`HTTP Server running on port ${this.httpPort}`);
         });
-
-        this.httpsServer = httpsServer.listen(this.httpsPort, () => {
-            console.log(`HTTPS Server running on port ${this.httpsPort}`);
-        });
-        // //starting server
-        // server.listen(this.port, () => console.log(`http://localhost:${this.port}`))
-        // this.server = this.app.listen(this.port, () => console.log(`http://localhost:${this.port}`))
+   
     }
     stop() {
         this.httpServer.close()

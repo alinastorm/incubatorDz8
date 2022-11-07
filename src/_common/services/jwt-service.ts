@@ -7,12 +7,16 @@ export const jwtService = {
 
     generateAccessToken(payload: AccessTokenPayloadModel) {
         const seconds = process.env.JWT_ACCESS_LIFE_TIME_SECONDS ?? 10
+        // console.log('******ACCESS expiresIn:', `${seconds}s`);
+
         const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: `${seconds}s` })
         const result: LoginSuccessViewModel = { accessToken }
         return result
     },
     generateRefreshToken(payload: RefreshTokenPayloadModel) {
         const seconds = process.env.JWT_REFRESH_LIFE_TIME_SECONDS ?? 20
+        // console.log('******REFRESH expiresIn:', `${seconds}s`);
+        
         const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: `${seconds}s` })
         return refreshToken
     },

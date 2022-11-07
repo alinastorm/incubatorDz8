@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { Response } from 'express-serve-static-core';
+import { IncomingHttpHeaders } from 'node:http';
 import { IObject } from '../../types/types';
 
 export enum HTTP_STATUSES {
@@ -21,6 +22,9 @@ export type RequestWithParamsBody<P, B> = Request<P, {}, B>
 export type RequestWithParamsQueryBody<P, Q, B> = Request<P, {}, B, Q>
 export interface RequestWithCookies<T> extends Request {
     cookies: T;
+}
+export interface RequestWithHeaders<T extends IncomingHttpHeaders> extends Request {
+    headers: T;
 }
 // export type RequestWithUser<U> = Request & U
 

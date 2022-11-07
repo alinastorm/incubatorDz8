@@ -10,5 +10,5 @@ import { run } from "./_common/services/periodicTasks/periodicTasks-service";
     await dbMongoService.connect()
     httpService.runHttpsServer()
     emailService.createTransporter()
-    run()
+    // run()
 })()

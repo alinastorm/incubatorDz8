@@ -2,13 +2,14 @@ import express from 'express';
 
 
 import { mainValidator400 } from '../_common/middlewares/mainValidator-middleware';
-import { authJwtBearerMiddleware } from '../_common/middlewares/authJwtBearer-middleware';
+import { authHeadersJwtMiddleware } from '../_common/middlewares/authHeadersJwtAccessToken-middleware';
 import authController from './auth-controller';
 import { loginBodyValidationMiddleware } from '../_common/middlewares/login-body-validation-middleware';
 import { passwordBodyValidationMiddleware } from '../_common/middlewares/password-body-validation-middleware';
 import { emailBodyValidationMiddleware } from '../_common/middlewares/email-validation-middleware';
 import { schemaLoginInputValidationMiddleware } from '../_common/middlewares/schemaLoginInput-validation-middleware';
 import { codeConfirmBodyValidationMiddleware } from '../_common/middlewares/codeConfirm-body-validation-middleware';
+import { authCookiesRefreshTokenMiddleware } from '../_common/middlewares/authCookiesRefreshToken-middleware';
 
 
 
@@ -19,10 +20,11 @@ authRoutes.post(`/auth/login`,
     // passwordBodyValidationMiddleware,
     schemaLoginInputValidationMiddleware,
     mainValidator400,
-    <any>authController.login)
+    <any> authController.login)
 
 authRoutes.post(`/auth/refresh-token`,
-     <any>authController.refreshTokens)
+    authCookiesRefreshTokenMiddleware,
+    <any> authController.refreshTokens)
 
 authRoutes.post(`/auth/registration-confirmation`,
     codeConfirmBodyValidationMiddleware,
@@ -45,9 +47,10 @@ authRoutes.post(`/auth/registration-email-resending`,
 )
 
 authRoutes.post(`/auth/logout`,
-     authController.logout
+    authCookiesRefreshTokenMiddleware,
+    <any>authController.logout
 )
 
-authRoutes.post(`/auth/me`,
-    <any> authJwtBearerMiddleware,
+authRoutes.get(`/auth/me`,
+    <any> authHeadersJwtMiddleware,
     <any> authController.getUser)

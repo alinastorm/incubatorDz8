@@ -12,7 +12,7 @@ import { sortDirectionQueryValidationMiddleware } from '../_common/middlewares/s
 
 import { commentsInputModelSchemaValidationMiddleware } from '../_common/middlewares/commentsInputSchema-validation-middleware';
 import { sortByCommentsQueryValidationMiddleware } from '../_common/middlewares/sortByComments-validation-middleware';
-import { authJwtBearerMiddleware } from '../_common/middlewares/authJwtBearer-middleware';
+import { authHeadersJwtMiddleware } from '../_common/middlewares/authHeadersJwtAccessToken-middleware';
 import postsController from './posts-controller';
 import { postParamIdInBDValidationMiddleware } from './validators/PostsIdParamInBD-validation-middleware';
 import { blogIdBodyInBDValidationMiddleware } from '../Blogs/validators/blogIdBodyInBD-validation-middleware';
@@ -32,7 +32,7 @@ postsRoutes.get(`/posts/:postId/comments`,
     <any>postsController.getCommentsByPostIdPaginationSort)
 
 postsRoutes.post(`/posts/:postId/comments`,
-    <any>authJwtBearerMiddleware,
+    <any>authHeadersJwtMiddleware,
     postIdParamValidationMiddleware,
     commentsInputModelSchemaValidationMiddleware,
     mainValidator400,
