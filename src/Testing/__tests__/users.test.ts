@@ -1,10 +1,10 @@
 // const request = require("supertest")
 import request from "supertest"
-import DbMongo from "../../_common/db/mongo/mongoDb-adapter"
+import DbMongo from "../../_common/services/mongoDb-service/mongoDb-adapter"
 import Ajv from "ajv"
 import { Response } from 'express';
 import { UserViewModel } from "../../Users/types"
-import { Paginator } from "../../_common/repository/types";
+import { Paginator } from "../../_common/abstractions/Repository/types";
 import httpService from "../../_common/services/http-service/http-service";
 
 

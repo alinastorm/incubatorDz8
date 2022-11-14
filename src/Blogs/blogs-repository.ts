@@ -1,10 +1,10 @@
 import { Filter } from 'mongodb';
 import postsRepository from '../Posts/posts-repository';
 import { PostViewModel } from '../Posts/types';
-import mongoDbAdapter from '../_common/db/mongo/mongoDb-adapter';
-import { AdapterType } from '../_common/db/mongo/types';
+import mongoDbAdapter from '../_common/services/mongoDb-service/mongoDb-adapter';
+import { AdapterType } from '../_common/services/mongoDb-service/types';
 
-import Repository from '../_common/repository/Repository';
+import Repository from '../_common/abstractions/Repository/Repository';
 import { BlogViewModel } from './types';
 
 

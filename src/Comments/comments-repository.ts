@@ -1,7 +1,7 @@
 
-import Repository from '../_common/repository/Repository';
-import mongoDbAdapter from '../_common/db/mongo/mongoDb-adapter';
-import { AdapterType } from '../_common/db/mongo/types';
+import Repository from '../_common/abstractions/Repository/Repository';
+import mongoDbAdapter from '../_common/services/mongoDb-service/mongoDb-adapter';
+import { AdapterType } from '../_common/services/mongoDb-service/types';
 
 
 

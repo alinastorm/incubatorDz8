@@ -6,7 +6,7 @@ import blogsRepository from './blogs-repository';
 import { BlogInputModel, BlogPostInputModel, BlogViewModel } from './types';
 import { PostViewModel } from '../Posts/types';
 import { HTTP_STATUSES, RequestWithBody, RequestWithParams, RequestWithParamsBody, RequestWithParamsQuery, RequestWithQuery, ResponseWithBodyCode, ResponseWithCode } from '../_common/services/http-service/types';
-import { Paginator, SearchPaginationModel } from '../_common/repository/types';
+import { Paginator, SearchPaginationModel } from '../_common/abstractions/Repository/types';
 
 
 

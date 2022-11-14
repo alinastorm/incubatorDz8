@@ -1,8 +1,8 @@
 import { Filter } from 'mongodb';
-import mongoDbAdapter from '../_common/db/mongo/mongoDb-adapter';
+import mongoDbAdapter from '../_common/services/mongoDb-service/mongoDb-adapter';
 import commentsRepository from '../Comments/comments-repository';
-import Repository from '../_common/repository/Repository';
-import { AdapterType } from '../_common/db/mongo/types';
+import Repository from '../_common/abstractions/Repository/Repository';
+import { AdapterType } from '../_common/services/mongoDb-service/types';
 import { CommentBdModel } from '../Comments/types';
 
 

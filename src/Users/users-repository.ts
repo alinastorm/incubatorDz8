@@ -1,9 +1,9 @@
 import authRepository from '../Auth/auth-repository';
-import Repository from '../_common/repository/Repository';
+import Repository from '../_common/abstractions/Repository/Repository';
 import { Filter } from 'mongodb';
-import mongoDbAdapter from '../_common/db/mongo/mongoDb-adapter';
+import mongoDbAdapter from '../_common/services/mongoDb-service/mongoDb-adapter';
 import { AuthViewModel } from '../Auth/types';
-import { AdapterType } from '../_common/db/mongo/types';
+import { AdapterType } from '../_common/services/mongoDb-service/types';
 
 
 
@@ -22,7 +22,7 @@ class UserRepository extends Repository {
             authRepository.deleteOne(auth.id)
         })
         return true
-        // TODO возможно нужно удалять comments
+        // TODO возможно нужно удалять comments при удалении пользователя
     }
 }
 

@@ -6,7 +6,7 @@ import commentsRepository from '../Comments/comments-repository';
 import { CommentBdModel, CommentInputModel, CommentViewModel } from '../Comments/types';
 import { UserViewModel } from '../Users/types';
 import usersRepository from '../Users/users-repository';
-import { Paginator, SearchPaginationModel } from '../_common/repository/types';
+import { Paginator, SearchPaginationModel } from '../_common/abstractions/Repository/types';
 import { HTTP_STATUSES, RequestWithBody, RequestWithHeaders, RequestWithParams, RequestWithParamsBody, RequestWithParamsQuery, RequestWithQuery, ResponseWithBodyCode, ResponseWithCode } from '../_common/services/http-service/types';
 import { NoExtraProperties } from '../_common/types/types';
 import postsRepository from './posts-repository';

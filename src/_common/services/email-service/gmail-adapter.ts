@@ -12,15 +12,27 @@ const transport: SMTPTransport | SMTPTransport.Options | string = {
 }
 
 class EmailService {
+
     transporter!: nodemailer.Transporter<SMTPTransport.SentMessageInfo>
+
     constructor(private transport: SMTPTransport | SMTPTransport.Options | string) { }
+    //async constructor
+    async then(resolve: any, reject: any) {
+        console.log('EmailService ... ');
+        try {
+            this.createTransporter
+            resolve()
+        } catch (error) {
+            this.stop()
+            console.log('EmailService error:', error);
+        }
+    }
 
     createTransporter() {
         const transport = nodemailer.createTransport(this.transport)
         if (!transport) throw Error('EmailService createTransporter error')
         this.transporter = transport
         console.log("Email transport:", this.transport);
-
     }
     sendActivationMail(to: string | Mail.Address | (string | Mail.Address)[] | undefined, link: string) {
         const mailOptions: Mail.Options = {
@@ -57,10 +69,9 @@ class EmailService {
         })
 
     }
-
-    exit() {
+    stop() {
         this.transporter.close()
     }
-
 }
-export default new EmailService(transport)
+//@ts-ignore
+export default await new EmailService(transport)

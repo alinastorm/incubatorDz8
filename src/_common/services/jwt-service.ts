@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 import { AccessTokenPayloadModel, LoginSuccessViewModel, RefreshTokenPayloadModel } from "../../Auth/types";
 
 const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'JWT_ACCESS_SECRET'

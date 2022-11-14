@@ -1,5 +1,5 @@
 import { Filter } from "mongodb"
-import { IObject } from "../types/types"
+import { IObject } from "../../types/types"
 
 export interface Paginator<T> {
     pagesCount: number

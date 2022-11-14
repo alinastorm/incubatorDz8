@@ -1,6 +1,6 @@
-import { IObject } from '../types/types';
+import { IObject } from '../../types/types';
 import { Filter } from 'mongodb';
-import { AdapterType } from '../db/mongo/types';
+import { AdapterType } from '../../services/mongoDb-service/types';
 import { Paginator, SearchPaginationModel } from './types';
 
 // const dataService = new DataService(mongoDbAdapter)

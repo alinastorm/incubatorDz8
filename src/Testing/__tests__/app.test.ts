@@ -1,6 +1,6 @@
 // const request = require("supertest")
 import request from "supertest"
-import DbMongo from "../../_common/db/mongo/mongoDb-adapter"
+import DbMongo from "../../_common/services/mongoDb-service/mongoDb-adapter"
 import Ajv from "ajv"
 import { HTTP_STATUSES } from "../../_common/services/http-service/types"
 import httpService from "../../_common/services/http-service/http-service"

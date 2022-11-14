@@ -7,7 +7,7 @@ import { UserInputModel, UsersSearchPaginationModel, UserViewModel } from './typ
 import { AuthViewModel } from '../Auth/types';
 import { BlogViewModel } from '../Blogs/types';
 import { HTTP_STATUSES, RequestWithBody, RequestWithParams, RequestWithQuery, ResponseWithBodyCode } from '../_common/services/http-service/types';
-import { Paginator, SearchPaginationModel } from '../_common/repository/types';
+import { Paginator, SearchPaginationModel } from '../_common/abstractions/Repository/types';
 
 
 class UserController {

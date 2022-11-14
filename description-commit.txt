@@ -1,4 +1,4 @@
 1.0.0 init
 1.0.1 dz8
 1.0.2 dz8
-
+1.0.3 refactor: async constructor

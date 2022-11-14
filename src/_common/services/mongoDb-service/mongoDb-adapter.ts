@@ -1,36 +1,39 @@
 import { Collection, MongoClient, Document, ObjectId, Filter } from 'mongodb'
-import { Paginator } from '../../repository/types';
+import { Paginator } from '../../abstractions/Repository/types';
 import { IObject } from '../../types/types';
 import { AdapterType } from './types';
 
-//Query Builder
+
 // Connection URL
 const urlMongo = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017'
-console.log('urlMongo:', urlMongo);
-
 const clientMongo = new MongoClient(urlMongo)
 // Database Name
 const dbName = process.env.mongoDbName || 'learning';
 const database = clientMongo.db(dbName);
-//Connect to Database
-// const connect = await new Promise<any>
 
-class DbMongo implements AdapterType {
+class DbMongoService implements AdapterType {
+    //async constructor
+    async then(resolve: any, reject: any) {
+        console.log('DbMongoService ... ');        
+        try {
+            await this.connect()
+            await this.ping()
+            resolve()
+        } catch (error) {
+            clientMongo.close()
+            console.log('DbMongoService error:', error);
+        }
+    }
 
     async connect() {
-        try {
-            // connect the client
-            await clientMongo.connect();
-            console.log('Connected successfully to db-server');
-
-            //connect db and verify connection    
-            database.command({ ping: 1 })
-            console.log(`Connected successfully to database: ${dbName}`);
-        } catch (error) {
-            console.log('mongo:', error);
-            //close client when error
-            await clientMongo.close()
-        }
+        // connect the client
+        await clientMongo.connect();
+        console.log('Mongo-adapter connected to db-server');
+    }
+    async ping() {
+        //connect db and verify connection    
+        await database.command({ ping: 1 })
+        console.log(`Mongo-adapter connected to database: ${dbName}`);
     }
     async disconnect() {
         await clientMongo.close();
@@ -146,7 +149,7 @@ class DbMongo implements AdapterType {
         const collection: Collection<Document> = database.collection(collectionName)
         const result = await collection.deleteMany({})
         return result.acknowledged
-    }
+    } 
 }
-
-export default new DbMongo()
+//@ts-ignore 
+export default await new DbMongoService()

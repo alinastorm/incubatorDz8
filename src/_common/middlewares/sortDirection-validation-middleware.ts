@@ -1,5 +1,5 @@
 import { param, query } from 'express-validator';
-import { SortDirectionsType } from '../repository/types';
+import { SortDirectionsType } from '../abstractions/Repository/types';
 
 
 export const sortDirectionQueryValidationMiddleware = query('sortDirection')
